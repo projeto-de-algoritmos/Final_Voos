@@ -6,6 +6,9 @@ const cors = require('cors');
 
 // Model types
 const Graph = require('./graph/Graph.js');
+const GraphEdge = require('./graph/GraphEdge.js');
+const GraphVertex = require('./graph/GraphVertex.js');
+const { bellmanFord } = require('./graph/bellman-ford/bellmanFord.js');
 const { airports } = require('./data/airports');
 
 // Add extension to String type
@@ -26,14 +29,27 @@ csv({ delimiter: ';' })
     // Insert CSV data into a graph
     const graph = new Graph();
 
-    // Add graph nodes
-    flights.forEach(({ origin }) => {
-      graph.addNode(origin);
-    });
+    let vertexes = {};
+    let edges = {};
 
-    // Add graph edges
+    // Add graph nodes
     flights.forEach((flight) => {
-      graph.addEdge(flight.origin, flight.destination, flight.price);
+      // If there is not a vertex from this origin, create one
+      if (!vertexes[flight.origin]) {
+        vertexes[flight.origin] = new GraphVertex(flight.origin);
+      }
+      // If there is not a vertex from this destination, create one
+      if (!vertexes[flight.destination]) {
+        vertexes[flight.destination] = new GraphVertex(flight.destination);
+      }
+
+      // If there is not a edge for this flight, create one
+      if (!edges[`${ flight.origin }/${ flight.destination }`]) {
+        const edge = new GraphEdge(vertexes[flight.origin], vertexes[flight.destination], parseFloat(flight.price));
+        edges[`${ flight.origin }/${ flight.destination }`] = edge;
+        // Insert the edge for this flight
+        graph.addEdge(edge);
+      }
     });
 
     data = graph;
@@ -70,9 +86,9 @@ app.get('/search', async(req, res) => {
   const origin = req.query.origin;
   const destination = req.query.destination;
 
-  const item = data.djikstraAlgorithm(origin, destination);
+  const item = bellmanFord(data, new GraphVertex(origin));
   
-  return res.send(item);
+  return res.send(item.distances[destination].toFixed(2));
 });
 
 // Start the Express App
