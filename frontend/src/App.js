@@ -40,7 +40,7 @@ function App() {
   return (
     <div>
       <header className="App-header">
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
           <Typography className={classes.title} gutterBottom>
             Voos
           </Typography>
@@ -64,20 +64,30 @@ function App() {
               <TextField id="passengers" label="Partida" />
               <TextField id="passengers" label="Origem" style={{marginLeft: "20px"}}/>
               <TextField
-                id="date"
-                label="Birthday"
+                id="ida"
+                label="Ida"
                 type="date"
                 // defaultValue="2017-05-24"
                 InputLabelProps={{
                   shrink: true,
                 }}
+                style={{marginLeft: "80px"}}
+              />
+              <TextField
+                id="volta"
+                label="Volta"
+                type="date"
+                // defaultValue="2017-05-24"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                style={{marginLeft: "20px"}}
               />
             </CardContent>
-            <CardActions>
-              <Button size="small">Learn More</Button>
+            <CardActions style={{justifyContent: "center"}}>
+              <Button size="small" variant="contained" color="primary">Pesquisar</Button>
             </CardActions>
           </Card>
-          {/* <Typography component="div" style={{ backgroundColor: '#cfe8fc', height: '100vh' }}> </Typography> */}
         </Container>
       </header>
     </div>
