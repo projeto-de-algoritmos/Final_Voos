@@ -103,7 +103,7 @@ const trip = (origin, destination) => {
  * @param {boolean} ow
  */
 app.get('/search', async(req, res) => {
-  const ow = req.query.ow;
+  const ow = JSON.parse(req.query.ow || false);
   const origin = req.query.origin;
   const destination = req.query.destination;
 
