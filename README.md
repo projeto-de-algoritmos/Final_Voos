@@ -11,10 +11,14 @@
 
 ## Sobre 
 O objetivo do projeto é de, utilizando uma base de dados sobre Voos e seus valores no ano de 2019, recriar uma interface de sites de compra de passages,
-utilizando um grafo para representar as rotas disponíveis e utilizando Bellman Ford para encontrar a rota com passagens mais baratas.
+utilizando um `Grafo` para representar as rotas disponíveis e utilizando `Bellman Ford` para encontrar a rota com passagens mais baratas.
 
 ## Screenshots
-Adicione 3 ou mais screenshots do projeto em funcionamento.
+![](https://i.imgur.com/0JZWZZU.png)
+
+![](https://i.imgur.com/QpuNpkY.png)
+
+![](https://i.imgur.com/wZjZWHl.png)
 
 ## Instalação 
 **Linguagem**: Javacript<br>
@@ -29,10 +33,10 @@ Em abas separadas do terminal você deverá rodar:
 
 ```haxe
 cd Final6_Voos/frontend; yarn; yarn start;
-cd Final6_Voos/backend; yarn; node index.js;
+cd Final6_Voos/backend; yarn; yarn start;
 ```
 O servidor poderá ser acessado em http://localhost:5000 enquanto o frontend será acessado em http://localhost:3000.
 
 ## Uso 
 
-Você deverá entrar na url http://localhost:3000, preencher todos os campos e pressionar o botão "Enviar".
+Você deverá entrar na url http://localhost:3000, preencher todos os campos e pressionar o botão "Pesquisar".
