@@ -63,9 +63,10 @@ const port = 5000;
 app.use(bodyParser.json())
 app.use(cors());
 
-// Query endpoint to search for a airport by name
-// Params
-// @ term: String -> Term to search for airports
+/**
+ * Query endpoint to search for a airport by name
+ * @param {string} term
+ */
 app.get('/query', (req, res) => {
   const term = req.query.term.toSearch();
 
@@ -77,18 +78,27 @@ app.get('/query', (req, res) => {
   return res.send(query);
 });
 
-// Search for a trip by origin and destination
-// Params
-// @ origin: String -> Code of origin airport
-// @ destination: String -> Code of destination airport
-// @ ow: Boolean -> Only way trip
+/**
+ * Search for a trip by origin and destination
+ * @param {string} origin
+ * @param {string} destination
+ * @param {boolean} ow
+ */
 app.get('/search', async(req, res) => {
+  const ow = req.query.ow;
   const origin = req.query.origin;
   const destination = req.query.destination;
 
   const item = bellmanFord(data, new GraphVertex(origin));
+  let price = item.distances[destination].toFixed(2);
+  let backprice = 0;
+
+  if (!ow) {
+    const back = bellmanFord(data, new GraphVertex(destination));
+    backprice = back.distances[origin].toFixed(2);
+  }
   
-  return res.send(item.distances[destination].toFixed(2));
+  return res.send((parseFloat(price) + parseFloat(backprice)).toFixed(2));
 });
 
 // Start the Express App
