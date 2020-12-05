@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
-import { Button, Container, CssBaseline, Typography, Card, CardActions, CardContent, InputLabel, Select, TextField } from '@material-ui/core';
+import { Button, Container, Typography, Card, CardActions, CardContent, Select, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles({
   root: {
@@ -33,7 +34,6 @@ function App() {
     day = '0' + day;
 
   d = [year, month, day].join('-');
-  console.log({d})
   const [typeFlight, setTypeFlight] = React.useState(1);
   const [passengers, setPassengers] = React.useState(1);
   const [origin, setOrigin] = React.useState('');
@@ -59,7 +59,6 @@ function App() {
   };
 
   const handleDateChangeOrigin = (date) => {
-    console.log(date.target.value)
     setSelectedDateOrigin(date.target.value);
   };
 
@@ -67,6 +66,7 @@ function App() {
     setSelectedDateDestination(date.target.value);
   };
 
+  const flights = [{ code: "SBBR", name: "Aeroporto Internacional Presidente Juscelino Kubitschek – Brasília, Distrito Federal" }, { code: "SBGP", name: "Aeródromo de Gavião PeixotoEmbraer - (Unidade Gavião Peixoto) – Gavião Peixoto, São Paulo" }, { code: "SBLB", name: "Aeroporto de Lábrea – Lábrea, Amazonas" }, { code: "SBRB", name: "Aeroporto Internacional de Rio Branco – Rio Branco, Acre" }, { code: "SBUA", name: "Aeroporto de São Gabriel da Cachoeira – São Gabriel da Cachoeira, Amazonas" }, { code: "SBVH", name: "Aeroporto Brigadeiro Camarão – Vilhena, Rondônia" }, { code: "SBYA", name: "Aeroporto de Iauaretê – São Gabriel da Cachoeira, Amazonas" }];
 
   return (
     <div>
@@ -88,13 +88,24 @@ function App() {
               </Select>
               <TextField onChange={handleChangePassengers} value={passengers} id="passengers" label="Passageiros" type="number" style={{marginLeft: "20px", top: "-18px"}}/>
               <br/>
-              <TextField onChange={handleChangeOrigin} value={origin} id="origin" label="Origem" />
-              <TextField onChange={handleChangeDestination} value={destination} id="destination" label="Destino" style={{marginLeft: "20px"}}/>
+              <div>
+                <Autocomplete
+                  options={flights}
+                  getOptionLabel={(option) => option.name}
+                  style={{ width: 200, float: "left" }}
+                  renderInput={(params) => <TextField {...params}  onChange={handleChangeOrigin} value={origin} id="origin" label="Origem" />}
+                />
+                <Autocomplete
+                  options={flights}
+                  getOptionLabel={(option) => option.name}
+                  style={{ width: 200, marginLeft: "20px", float: "left" }}
+                  renderInput={(params) => <TextField {...params}  onChange={handleChangeDestination} value={destination} id="destination" label="Destino" />}
+                />
+              </div>
               <TextField
                 id="ida"
                 label="Ida"
                 type="date"
-                // defaultValue="2017-05-24"
                 value={selectedDateOrigin}
                 onChange={handleDateChangeOrigin}
                 InputLabelProps={{
@@ -102,12 +113,10 @@ function App() {
                 }}
                 style={{marginLeft: "80px"}}
               />
-              {console.log({selectedDateOrigin})}
               <TextField
                 id="volta"
                 label="Volta"
                 type="date"
-                // defaultValue="2017-05-24"
                 value={selectedDateDestination}
                 onChange={handleDateChangeDestination}
                 InputLabelProps={{
