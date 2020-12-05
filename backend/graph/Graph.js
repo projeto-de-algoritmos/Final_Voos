@@ -189,6 +189,20 @@ class Graph {
   }
 
   /**
+   * @return {[]}
+   */
+  getPath(startVertex, endVertex, vertices) {
+    const path = [endVertex];
+    let p = vertices[endVertex];
+    while (p.getKey() !== startVertex.getKey()) {
+      path.unshift(p);
+      p = vertices[p];
+    }
+    path.unshift(startVertex);
+    return path.map(i => i.getKey());
+  }
+
+  /**
    * @return {string}
    */
   toString() {

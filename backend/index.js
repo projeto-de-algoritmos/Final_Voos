@@ -22,15 +22,19 @@ String.prototype.toSearch = function() {
 };
 
 // Process CSV
+let graph;
 let data;
 csv({ delimiter: ';' })
   .fromFile('./data/flights.CSV')
   .then((flights) => {
     // Insert CSV data into a graph
-    const graph = new Graph();
+    const g = new Graph(true);
 
     let vertexes = {};
     let edges = {};
+
+    // Used to find the non optimal prices
+    data = flights;
 
     // Add graph nodes
     flights.forEach((flight) => {
@@ -48,11 +52,11 @@ csv({ delimiter: ';' })
         const edge = new GraphEdge(vertexes[flight.origin], vertexes[flight.destination], parseFloat(flight.price));
         edges[`${ flight.origin }/${ flight.destination }`] = edge;
         // Insert the edge for this flight
-        graph.addEdge(edge);
+        g.addEdge(edge);
       }
     });
 
-    data = graph;
+    graph = g;
   });
 
 // Create Express App
@@ -78,6 +82,20 @@ app.get('/query', (req, res) => {
   return res.send(query);
 });
 
+const trip = (origin, destination) => {
+  const startVertex = new GraphVertex(origin);
+  const endVertex = new GraphVertex(destination);
+
+  const item = bellmanFord(graph, startVertex);
+  const price = item.distances[destination].toFixed(2);
+  const path = graph.getPath(startVertex, endVertex, item.previousVertices);
+  
+  return {
+    price,
+    path
+  };
+}
+
 /**
  * Search for a trip by origin and destination
  * @param {string} origin
@@ -89,16 +107,16 @@ app.get('/search', async(req, res) => {
   const origin = req.query.origin;
   const destination = req.query.destination;
 
-  const item = bellmanFord(data, new GraphVertex(origin));
-  let price = item.distances[destination].toFixed(2);
-  let backprice = 0;
+  let result = {};
 
+  result.going = trip(origin, destination);
+
+  // If it's a round trip
   if (!ow) {
-    const back = bellmanFord(data, new GraphVertex(destination));
-    backprice = back.distances[origin].toFixed(2);
+    result.back = trip(destination, origin);
   }
   
-  return res.send((parseFloat(price) + parseFloat(backprice)).toFixed(2));
+  return res.send(result);
 });
 
 // Start the Express App
