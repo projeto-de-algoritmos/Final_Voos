@@ -8,6 +8,8 @@ const port = 5000;
 app.use(bodyParser.json())
 app.use(cors());
 
-app.get('/search', async() => {});
+app.get('/search', async(req, res) => {
+  const term = req.query.term;
+});
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
