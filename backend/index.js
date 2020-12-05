@@ -82,6 +82,17 @@ app.get('/query', (req, res) => {
   return res.send(query);
 });
 
+/**
+ * Request all available airports
+ */
+app.get('/airports', (_, res) => {
+  const items = Object
+    .entries(airports)
+    .map(([code, name]) => ({ code, name }));
+
+  return res.send(items);
+});
+
 const trip = (origin, destination) => {
   const startVertex = new GraphVertex(origin);
   const endVertex = new GraphVertex(destination);
@@ -92,7 +103,7 @@ const trip = (origin, destination) => {
   
   return {
     price,
-    path
+    path: path.map(i => airports[i])
   };
 }
 
