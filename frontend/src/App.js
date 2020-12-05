@@ -22,12 +22,24 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
+  let d = new Date();
+  let month = '' + (d.getMonth());
+  let day = '' + d.getDate();
+  let year = d.getFullYear();
+
+  if (month.length < 2) 
+    month = '0' + month;
+  if (day.length < 2) 
+    day = '0' + day;
+
+  d = [year, month, day].join('-');
+  console.log({d})
   const [typeFlight, setTypeFlight] = React.useState(1);
   const [passengers, setPassengers] = React.useState(1);
   const [origin, setOrigin] = React.useState('');
   const [destination, setDestination] = React.useState('');
-  const [selectedDateOrigin, setSelectedDateOrigin] = React.useState(new Date());
-  const [selectedDateDestination, setSelectedDateDestination] = React.useState(new Date());
+  const [selectedDateOrigin, setSelectedDateOrigin] = React.useState(d);
+  const [selectedDateDestination, setSelectedDateDestination] = React.useState(d);
 
 
   const handleChangeTypeFlight = (event) => {
@@ -47,11 +59,12 @@ function App() {
   };
 
   const handleDateChangeOrigin = (date) => {
-    setSelectedDateOrigin(date);
+    console.log(date.target.value)
+    setSelectedDateOrigin(date.target.value);
   };
 
   const handleDateChangeDestination = (date) => {
-    setSelectedDateDestination(date);
+    setSelectedDateDestination(date.target.value);
   };
 
 
